@@ -14,7 +14,7 @@ const App = props => (
     
     <Grid.Column computer={10} mobile={16} tablet={16}>
     <Header as="h1" dividing>
-      A sample form with Semantic UI React and Redux Form
+        Register for Covid Appointment   
     </Header>
 
     <ProfileForm onSubmit={() => console.log("ProfileForm was submitted")} />
