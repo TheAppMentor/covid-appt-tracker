@@ -1,173 +1,87 @@
-import React, { Fragment } from "react";
-import { Field, reduxForm } from "redux-form";
-import { Icon, Form, Message, Input, Divider } from "semantic-ui-react";
+import React from "react";
+import { useFormik } from "formik";
+import { Input, Form, Button } from "semantic-ui-react";
 
-
-const validate = values => {
-  const errors = {}
-
-    if (!values.email) {
-        errors.email = 'Required'
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        errors.email = 'Invalid email address'
-    }
-    return errors
-}
-const email = (value) =>
-    value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
-        ? "Invalid email address"
-        : undefined;
-const phone = (value) =>
-    value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
-        ? "Invalid email address"
-        : undefined;
-
-const renderSelect = (field) => (
-    <Form.Select
-        label={field.label}
-        name={field.input.name}
-        onChange={(e, { value }) => field.input.onChange(value)}
-        options={field.options}
-        placeholder={field.placeholder}
-        value={field.input.value}
-    />
-);
-
-const renderField = (field) => (
-    <Form>
-        <Input
-            label="Email"
-            placeholder="joe@schmoe.com"
-            icon="at"
-            iconPosition="left"
-        />
-    </Form>
-    /*
-    <Input iconPosition="left" placeholder="Email">
-        <Icon name="at" />
-        <input />
-    </Input>
-
-    <Form.Field
-        name={field.input.name}
-        control={Input}
-        label={field.label}
-        placeholder={field.placeholder}
-    />
-*/
-);
-
-const ProfileForm = (props) => {
-    const { handleSubmit, reset } = props;
-
+export const ContactForm = () => {
+    // Pass the useFormik() hook initial form values and a submit function that will
+    // be called when the form is submitted
+    const formik = useFormik({
+        initialValues: {
+            email: "",
+            firstName: "",
+            lastName: "Default Last Name",
+        },
+        onSubmit: (values) => {
+            alert(JSON.stringify(values, null, 2));
+        },
+    });
     return (
-        <Fragment>
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={formik.handleSubmit}>
                 <Form.Group widths="equal">
-                    <Field
-                        component={Form.Input}
-                        label="First name"
-                        name="firstName"
+                    <Form.Field
+                        id="firstName"
+                        control={Input}
+                        type="text"
+                        label="First Name"
                         placeholder="First name"
-                        required={true}
+                        value={formik.values.firstName}
+                        onChange={formik.handleChange}
                     />
-                    <Field
-                        component={Form.Input}
-                        label="Last name"
-                        name="lastName"
+
+                    <Form.Field
+                        id="lastName"
+                        control={Input}
+                        type="text"
+                        label="Last Name"
                         placeholder="Last name"
+                        value={formik.values.lastName}
+                        onChange={formik.handleChange}
                     />
                 </Form.Group>
 
-                <Divider hidden />
-
-                <Form.Group widths="equal">
-                    <Field
-                        component={renderSelect}
-                        label="Age Group"
-                        name="ageGroup"
-                        options={[
-                            { key: "m", text: "18 - 45 Years", value: "18" },
-                            { key: "f", text: "45+ Years", value: "45" },
-                        ]}
-                        placeholder="Age Group"
-                        required={true}
-                    />
-                    <Field
-                        component={renderSelect}
-                        label="Vaccine Choice"
-                        name="vaccine"
-                        options={[
-                            { key: "ANY", text: "Any", value: "ANY" },
-                            { key: "COVI", text: "COVISHEILD", value: "COVI" },
-                            { key: "COVAX", text: "COVAXIN", value: "COVAX" },
-                        ]}
-                        placeholder="Select your Vaccine"
-                        required={true}
-                    />
-                    <Field
-                        component={renderSelect}
-                        label="Price"
-                        name="price"
-                        options={[
-                            { key: "ANY", text: "Any", value: "ANY" },
-                            { key: "FREE", text: "Free", value: "FREE" },
-                            { key: "PAID", text: "Paid", value: "PAID" },
-                        ]}
-                        placeholder="Price"
-                        required={true}
-                    />
-                </Form.Group>
-
-                <Divider hidden />
-                <Form.Group widths="equal">
-                    <Field
-                        component={Form.Input}
+                    <Form.Field
+                        id="email"
+                        control={Input}
+                        type="text"
                         label="Email"
-                        name="email"
-                        type="email"
-                        icon = "at"
-                        iconPosition= "left"
-                        placeholder="john.doe@gmail.com"
-                        required={true}                 
-        validate={email}
+                        placeholder="email"
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
                     />
-                    <Field
-                        component={Form.Input}
-                        label="Phone"
-                        name="phone"
-                        type="phone"
-                        icon = "phone"
-                        iconPosition= "left"
-                        placeholder="10-digit phone number"
-                        //validate={phone}
-                    />
-                </Form.Group>
-
-                <Divider hidden />
-
-                <Form.Group inline>
-                    <Form.Button primary>Submit</Form.Button>
-                    <Form.Button onClick={reset}>Reset</Form.Button>
-                </Form.Group>
+                <Form.Button content="Submit" primary/>
             </Form>
-
-            <Message
-                success
-                header="Form Completed"
-                content="You're signed up for Vaccination appointment alerts. We will send you an email when a vaccination slot is available."
-            />
-
-            <Message
-                error
-                header="Registration Failed"
-                content="The email you entered is already regsitered."
-            />
-        </Fragment>
     );
 };
 
-export default reduxForm({
-    form: "profile",
-    validate
-})(ProfileForm);
+/*
+import React from "react";
+import { Form, Button } from "semantic-ui-react";
+import { useFormik } from "formik";
+
+export const ContactForm = () => {
+    const formik = useFormik({
+        initialValues: {
+            email: "",
+        },
+        onSubmit: (values) => {
+            console.log("On Submit was called");
+            //alert("Ok Form was submitted " + JSON.stringify(values, null, 2));
+        },
+    });
+
+    return (
+        <form onSubmit={formik.onSubmit}>
+            <Form.Input 
+        id="email" 
+        name="email" 
+        type="email"
+        onChange={formik.onChange}
+        value={formik.values.email}
+        placeholder="Please Enter Email" 
+
+        />
+        <Button content="Submit" type="submit" />
+        </form>
+    );
+};
+*/
