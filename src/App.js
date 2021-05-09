@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid, Container, Divider, Header, Message } from "semantic-ui-react";
 
-import { ContactForm } from './components/contactForm'
+import { ContactForm } from './components/ContactForm'
 
 const fetch = require("node-fetch");
 
