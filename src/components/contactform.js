@@ -1,14 +1,20 @@
-import React from "react";
+import { React, useState } from "react";
 import { useFormik } from "formik";
-import { Divider, Input, Form, Button } from "semantic-ui-react";
+import { Message, Divider, Input, Form, Button } from "semantic-ui-react";
 import * as Yup from "yup";
 
-export const ContactForm = () => {
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+
+export const ContactForm = (props) => {
     // Pass the useFormik() hook initial form values and a submit function that will
     // be called when the form is submitted
+
+    const [isValidForm, setIsValidForm] = useState(false)
+
     const formik = useFormik({
         initialValues: {
             email: "",
+            phone: "",
             firstName: "",
             lastName: "",
             ageGroup: "18",
@@ -25,12 +31,18 @@ export const ContactForm = () => {
             email: Yup.string()
                 .email("Invalid email address")
                 .required("Required"),
+            phone: Yup.string().matches(
+                phoneRegExp,
+                "Phone number is not valid"
+            ),
         }),
         onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
+            setIsValidForm(props.onSubmit(values)) 
+            console.log(JSON.stringify(values, null, 2));
         },
     });
     return (
+    <div>
         <Form onSubmit={formik.handleSubmit}>
             <Form.Group widths="equal">
                 <Form.Field
@@ -79,7 +91,7 @@ export const ContactForm = () => {
                         { key: "45", text: "45+ Years", value: "45" },
                     ]}
                     placeholder="Age Group"
-        defaultValue="18"
+                    defaultValue="18"
                     required={true}
                 />
 
@@ -92,7 +104,7 @@ export const ContactForm = () => {
                         { key: "PAID", text: "Paid", value: "PAID" },
                     ]}
                     placeholder="Price"
-        defaultValue="ANY"
+                    defaultValue="ANY"
                     required={true}
                 />
 
@@ -105,21 +117,25 @@ export const ContactForm = () => {
                         { key: "COVAX", text: "COVAXIN", value: "COVAX" },
                     ]}
                     placeholder="Select your Vaccine"
-        defaultValue="ANY"
+                    defaultValue="ANY"
                     required={true}
                 />
             </Form.Group>
 
             <Divider hidden />
 
+            <Form.Group widths="equal">
             <Form.Field
                 id="email"
                 control={Input}
                 type="text"
                 label="Email"
+                icon="at"
+                iconPosition="left"
                 placeholder="email"
                 value={formik.values.email}
                 onChange={formik.handleChange}
+                required={true}
                 error={
                     formik.touched.email &&
                     formik.errors.email && {
@@ -128,7 +144,35 @@ export const ContactForm = () => {
                     }
                 }
             />
-            <Button content="Submit" type="submit" primary />
+            <Form.Field
+                id="phone"
+                control={Input}
+                type="text"
+                label="Phone"
+                icon="phone"
+                iconPosition="left"
+                placeholder="Enter Mobile Phone"
+                value={formik.values.phone}
+                onChange={formik.handleChange}
+                error={
+                    formik.touched.phone &&
+                    formik.errors.phone && {
+                        content: formik.errors.phone,
+                        pointing: "above",
+                    }
+                }
+            />
+            
+            </Form.Group>
+
+        <Button content="Submit" type="submit" primary />
+            <Button content="Reset" type="reset" />
         </Form>
+
+       {isValidForm &&  <Message>
+                    <Message.Header>Form data:</Message.Header>
+                    <pre>{JSON.stringify(props, null, 2)}</pre>
+                </Message>}
+    </div>
     );
 };

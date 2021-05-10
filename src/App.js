@@ -2,8 +2,7 @@ import React from "react";
 import { Grid, Container, Divider, Header, Message } from "semantic-ui-react";
 
 import { ContactForm } from './components/ContactForm'
-
-const fetch = require("node-fetch");
+import { saveUser } from './NetworkHandler'
 
 const App = (props) => (
     <Container>
@@ -25,12 +24,8 @@ const App = (props) => (
                     </p>
                 </Message>
 
-                <ContactForm />
+                <ContactForm onSubmit={saveUser}/>
 
-                <Message>
-                    <Message.Header>Form data:</Message.Header>
-                    <pre>{JSON.stringify(props, null, 2)}</pre>
-                </Message>
             </Grid.Column>
             <Grid.Column only="computer"></Grid.Column>
         </Grid>
